@@ -1,5 +1,6 @@
 package ivan.Graphics.Panel;
 
+import ivan.Card;
 import ivan.Player;
 
 import javax.swing.*;
@@ -13,8 +14,15 @@ public class GameTablePanel extends JPanel {
     public JPanel playerCardsPanel = new JPanel(new GridLayout(1, 6, 5, 0));
     public JPanel centerPanel;
     private ArrayList<JButton> centerButtons = new ArrayList<>();
+    public ArrayList<JButton> defenceCardsButtons = new ArrayList<>();
+    public ArrayList<JButton> attackCardsButtons = new ArrayList<>();
+    public ArrayList<JButton> playerCardsButtons = new ArrayList<>();
+
+
+
     public JButton endActionButton;
-     // Добавляем массив для кнопок центра
+    private Player player = null;
+    // Добавляем массив для кнопок центра
 
     public GameTablePanel(int width, int height, int countOfPlayers, int countOfCards) {
         WIDTH = width;
@@ -152,8 +160,14 @@ public class GameTablePanel extends JPanel {
             JButton fieldCardButton = new JButton(); // Временно добавляем текст для видимости
             styleCardButton(fieldCardButton);
             centerButtons.add(i,fieldCardButton); // Сохраняем ссылку на кнопку
+            if (i <= 6){
+                attackCardsButtons.add(fieldCardButton);
+            } else {
+                defenceCardsButtons.add(fieldCardButton);
+            }
             this.centerPanel.add(fieldCardButton);
         }
+
 
         return this.centerPanel;
     }
@@ -174,6 +188,7 @@ public class GameTablePanel extends JPanel {
             JButton playerCard = new JButton("P" + (i + 1)); // Временно добавляем текст для видимости
             styleCardButton(playerCard);
             this.playerCardsPanel.add(playerCard);
+            this.playerCardsButtons.add(playerCard);
         }
 
         bottomPanel.add(playerCardsPanel, BorderLayout.CENTER);
@@ -231,9 +246,16 @@ public class GameTablePanel extends JPanel {
             int size = 1 + (int) (Math.random() * 3);
             g2d.fillOval(x, y, size, size);
         }
+        if (this.player != null){
+            refreshPlayersCard();
+        }
     }
 
-    public void refreshPlayersCard(Player player) {
+    public void setPlayer(Player newPlayer){
+        this.player = newPlayer;
+    }
+
+    public void refreshPlayersCard() {
         int k = 0;
         for (Component c : playerCardsPanel.getComponents()) {
             if (c instanceof JButton button) {
@@ -241,16 +263,15 @@ public class GameTablePanel extends JPanel {
                     // Масштабируем иконку до нужного размера
                     ImageIcon originalIcon = player.getCards().get(k).getIconCard().get();
                     if (originalIcon != null) {
-                        Image scaledImage = originalIcon.getImage().getScaledInstance(
-                                100, 145, Image.SCALE_SMOOTH
-                        );
-                        button.setIcon(new ImageIcon(scaledImage));
-                        button.setText(""); // Убираем текст когда есть иконка
+                        button.setIcon(new ImageIcon(originalIcon.getImage()
+                                .getScaledInstance(100, 145, Image.SCALE_SMOOTH)));
+                        button.setText("");
                     }
+                    //idшник
                     button.setName(player.getCards().get(k).getCardsId());
                 } else {
-                    button.setIcon(null); // Очищаем иконку, если карты нет
-                    button.setText("P" + (k + 1)); // Возвращаем текст
+                    button.setIcon(null);
+                    button.setText("P" + (k + 1));
                     button.setName("");
                 }
             }
@@ -259,28 +280,52 @@ public class GameTablePanel extends JPanel {
     }
 
     // Метод для обновления карт в центре стола
-    public void refreshCenterCards(java.util.List<ivan.Card> cards) {
-        for (int i = 0; i < centerButtons.size(); i++) {
+    public void refreshCenterCards(Card[] attackCards, Card[] defenceCards) {
+        for (int i = 0; i <= 5; i++) {
             JButton button = centerButtons.get(i);
             if (button != null) {
-                if (i < cards.size() && cards.get(i) != null) {
+                if (attackCards[i] != null) {
                     // Масштабируем иконку до нужного размера
-                    ImageIcon originalIcon = cards.get(i).getIconCard().get();
+                    ImageIcon originalIcon = attackCards[i].getIconCard().get();
+                    System.out.println("2");
                     if (originalIcon != null) {
                         Image scaledImage = originalIcon.getImage().getScaledInstance(
                                 100, 145, Image.SCALE_SMOOTH
                         );
                         button.setIcon(new ImageIcon(scaledImage));
-                        button.setText(""); // Убираем текст когда есть иконка
+                        button.setText("");
                     }
-                    button.setName(cards.get(i).getCardsId());
+                    button.setName(attackCards[i].getCardsId());
                 } else {
-                    button.setIcon(null); // Очищаем иконку, если карты нет
-                    button.setText("C" + (i + 1)); // Возвращаем текст
+                    button.setIcon(null);
+                    button.setText("C" + (i + 1));
                     button.setName("");
                 }
             }
         }
+        for (int i = 6; i <= 11; i++) {
+            JButton button = centerButtons.get(i);
+            if (button != null) {
+                if (defenceCards[i - 6] != null) {
+                    ImageIcon originalIcon = defenceCards[i - 6].getIconCard().get();
+                    System.out.println("2");
+                    if (originalIcon != null) {
+                        Image scaledImage = originalIcon.getImage().getScaledInstance(
+                                100, 145, Image.SCALE_SMOOTH
+                        );
+                        button.setIcon(new ImageIcon(scaledImage));
+                        System.out.println("cartinka");
+                        button.setText("");
+                    }
+                    button.setName(defenceCards[i - 6].getCardsId());
+                } else {
+                    button.setIcon(null);
+                    button.setText("C" + (i + 1));
+                    button.setName("");
+                }
+            }
+        }
+
     }
 
     // Метод для получения кнопки центральной панели по индексу

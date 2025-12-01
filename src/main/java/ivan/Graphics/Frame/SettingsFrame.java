@@ -1,7 +1,6 @@
 package ivan.Graphics.Frame;
 
-import ivan.Graphics.DurakSettings;
-import ivan.Graphics.Panel.GameTablePanel;
+import ivan.DurakSettings;
 import ivan.Graphics.Panel.SettingsOfGamePanel;
 import ivan.Utils;
 
@@ -26,9 +25,9 @@ public class SettingsFrame extends JFrame {
         settingsOfGamePanel.startButton.addActionListener(e -> {
             settings.setSettings(Utils.getCountOfPlayersFromSettingsPanel(this.settingsOfGamePanel),
                     Utils.getCountOfCardsFromSettingsPanel(this.settingsOfGamePanel));
-            dispose();
             this.gameTableFrame = new GameTableFrame(settings);
+            settings.ready();
+            dispose();
         });
     }
 }
-

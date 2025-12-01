@@ -13,6 +13,9 @@ public class PlayTable {
     private ArrayList<Player> queueOfPlayers;
     private ArrayList<Card> playersCards;
 
+    public Card[] defenceCards = new Card[6];
+    public Card[] attackCards = new Card[6];
+
     public Player attackPlayer;
     public Player defensePlayer;
 
@@ -66,12 +69,12 @@ public class PlayTable {
     public void setFreeCards() {
         setPlayersCards();
         ArrayList<Card> fCards = new ArrayList<>();
-         for (Card card : this.startCards) {
-             if (!this.playersCards.contains(card)) {
+        for (Card card : this.startCards) {
+            if (!this.playersCards.contains(card)) {
                 fCards.add(card);
-             }
-         }
-         this.freeCards = fCards;
+            }
+        }
+        this.freeCards = fCards;
     }
 
     public void setPlayersCards(){

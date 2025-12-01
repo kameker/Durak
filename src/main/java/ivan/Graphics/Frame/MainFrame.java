@@ -1,6 +1,6 @@
 package ivan.Graphics.Frame;
 
-import ivan.Graphics.DurakSettings;
+import ivan.DurakSettings;
 import ivan.Graphics.Panel.MainMenuPanel;
 
 import javax.swing.*;

@@ -9,4 +9,10 @@ public class Utils {
     public static int getCountOfCardsFromSettingsPanel(SettingsOfGamePanel panel){
         return panel.deck36Button.isSelected() ? 36 : (panel.deck52Button.isSelected() ? 52 : 54);
     }
+    public static boolean isCardsAllNull(Card[] cards){
+        for (Card card : cards){
+            if (card != null) return false;
+        }
+        return true;
+    }
 }
