@@ -23,8 +23,12 @@ public class Player {
     public int getNumCards(){
         return cards.size();
     }
-    public boolean isWin(){
-        return this.getNumCards() == 0;
+    public ArrayList<ConsoleCard> getConsoleCards(){
+        ArrayList<ConsoleCard> consoleCards = new ArrayList<>();
+        for (Card card : cards) {
+            consoleCards.add(card.getConsoleCard());
+        }
+        return consoleCards;
     }
     @Override
     public boolean equals(Object obj) {

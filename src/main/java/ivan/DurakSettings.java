@@ -3,7 +3,8 @@ package ivan;
 public class DurakSettings {
     private int countOfPlayers;
     private int countOfCards;
-    private boolean isReady = false;
+    private int countOfRobots;
+    private boolean isReady = true;
 
     public int getCountOfPlayers() {
         return isCountOfPlayersIsReal() ? countOfPlayers : 2;
@@ -39,6 +40,7 @@ public class DurakSettings {
     public String settingsToString() {
         String str = "";
         str += "Игроков: " + countOfPlayers + "\n";
+        str += "Роботов: " + countOfRobots + "\n";
         str += "Карт: " + countOfCards + "\n";
         str += "Настройки готовы: " + isReady + "\n";
         return str;
