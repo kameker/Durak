@@ -1,5 +1,5 @@
 package ivan;
-
+// после побития 1 из 2-ух карт завершается деф
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -13,8 +13,8 @@ public class PlayTable {
     private int minCard;
     private int maxCard = 14;
 
-    private Player attackingPlayer;
-    private Player defendingPlayer;
+    public Player attackingPlayer;
+    public Player defendingPlayer;
 
     private int phaseOfGame;
     private Deck deck;
@@ -33,15 +33,16 @@ public class PlayTable {
         this.setCardsForPlayers();
         this.setQueueOfPlayers();
         this.activePlayer = this.queueOfPlayers.get(0);
-        this.defendingPlayer = this.queueOfPlayers.get(1);
-        this.attackingPlayer = this.queueOfPlayers.get(0);
     }
     public Deck getDeck() {
         return deck;
     }
+    public void nextActivePlayer(){
+        this.activePlayer = queueOfPlayers.get((queueOfPlayers.indexOf(this.activePlayer) + 1 ) % queueOfPlayers.size());
+    }
     public void nextPhaseOfGame(){
         this.phaseOfGame = (this.phaseOfGame++) % 4;
-        this.activePlayer = queueOfPlayers.get(queueOfPlayers.indexOf(this.activePlayer) + 1);
+        nextActivePlayer();
     }
     public int getPhaseOfGame() {
         return phaseOfGame;
