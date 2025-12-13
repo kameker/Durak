@@ -4,7 +4,39 @@ import java.util.ArrayList;
 
 public enum ConsoleCard {
 
-    // Пики (Spades 1)
+    // Пики (Spades 1) - добавлены карты 2-5
+    TWO_SPADE("21", 2,
+            """
+                    ┌─────┐
+                    │2    │
+                    │  1  │
+                    │    2│
+                    └─────┘"""),
+
+    THREE_SPADE("31", 3,
+            """
+                    ┌─────┐
+                    │3    │
+                    │  1  │
+                    │    3│
+                    └─────┘"""),
+
+    FOUR_SPADE("41", 4,
+            """
+                    ┌─────┐
+                    │4    │
+                    │  1  │
+                    │    4│
+                    └─────┘"""),
+
+    FIVE_SPADE("51", 5,
+            """
+                    ┌─────┐
+                    │5    │
+                    │  1  │
+                    │    5│
+                    └─────┘"""),
+
     SIX_SPADE("61", 6,
             """
                     ┌─────┐
@@ -77,7 +109,39 @@ public enum ConsoleCard {
                     │   14│
                     └─────┘"""),
 
-    // Черви (Hearts 3)
+    // Черви (Hearts 3) - добавлены карты 2-5
+    TWO_HEART("23", 2,
+            """
+                    ┌─────┐
+                    │2    │
+                    │  3  │
+                    │    2│
+                    └─────┘"""),
+
+    THREE_HEART("33", 3,
+            """
+                    ┌─────┐
+                    │3    │
+                    │  3  │
+                    │    3│
+                    └─────┘"""),
+
+    FOUR_HEART("43", 4,
+            """
+                    ┌─────┐
+                    │4    │
+                    │  3  │
+                    │    4│
+                    └─────┘"""),
+
+    FIVE_HEART("53", 5,
+            """
+                    ┌─────┐
+                    │5    │
+                    │  3  │
+                    │    5│
+                    └─────┘"""),
+
     SIX_HEART("63", 6,
             """
                     ┌─────┐
@@ -148,6 +212,39 @@ public enum ConsoleCard {
                     │14   │
                     │  3  │
                     │   14│
+                    └─────┘"""),
+
+    // Бубны (Diamonds 4) - добавлены карты 2-5
+    TWO_DIAMOND("24", 2,
+            """
+                    ┌─────┐
+                    │2    │
+                    │  4  │
+                    │    2│
+                    └─────┘"""),
+
+    THREE_DIAMOND("34", 3,
+            """
+                    ┌─────┐
+                    │3    │
+                    │  4  │
+                    │    3│
+                    └─────┘"""),
+
+    FOUR_DIAMOND("44", 4,
+            """
+                    ┌─────┐
+                    │4    │
+                    │  4  │
+                    │    4│
+                    └─────┘"""),
+
+    FIVE_DIAMOND("54", 5,
+            """
+                    ┌─────┐
+                    │5    │
+                    │  4  │
+                    │    5│
                     └─────┘"""),
 
     SIX_DIAMOND("64", 6,
@@ -222,7 +319,39 @@ public enum ConsoleCard {
                     │   14│
                     └─────┘"""),
 
-    // Крести (Clubs 2)
+    // Крести (Clubs 2) - добавлены карты 2-5
+    TWO_CLUB("22", 2,
+            """
+                    ┌─────┐
+                    │2    │
+                    │  2  │
+                    │    2│
+                    └─────┘"""),
+
+    THREE_CLUB("32", 3,
+            """
+                    ┌─────┐
+                    │3    │
+                    │  2  │
+                    │    3│
+                    └─────┘"""),
+
+    FOUR_CLUB("42", 4,
+            """
+                    ┌─────┐
+                    │4    │
+                    │  2  │
+                    │    4│
+                    └─────┘"""),
+
+    FIVE_CLUB("52", 5,
+            """
+                    ┌─────┐
+                    │5    │
+                    │  2  │
+                    │    5│
+                    └─────┘"""),
+
     SIX_CLUB("62", 6,
             """
                     ┌─────┐
@@ -312,7 +441,6 @@ public enum ConsoleCard {
                     │ RED │
                     └─────┘""");
 
-
     private final String id;
     private final int rank;
     private final String graphic;
@@ -329,7 +457,6 @@ public enum ConsoleCard {
         return id;
     }
 
-
     public int getRank() {
         return rank;
     }
@@ -338,28 +465,54 @@ public enum ConsoleCard {
         return graphic;
     }
 
-    // Получить карту по имени
+    // Получить карту по ID
     public static ConsoleCard fromById(String id) {
-        for (ConsoleCard ConsoleCard : values()) {
-            if (ConsoleCard.id.equals(id)) {
-                return ConsoleCard;
+        for (ConsoleCard card : values()) {
+            if (card.id.equals(id)) {
+                return card;
             }
         }
         return null;
     }
 
-    public static void printCards(ArrayList<ConsoleCard> consoleCards) {
-        if (consoleCards == null || consoleCards.isEmpty()) return;
+    // Получить все карты стандартной колоды (52 карты без джокеров)
+    public static ConsoleCard[] getStandardDeck() {
+        ConsoleCard[] deck = new ConsoleCard[52];
+        int index = 0;
 
-        String[] firstConsoleCardLines = consoleCards.get(0).graphic.split("\n");
-        int height = firstConsoleCardLines.length;
+        // Добавляем все карты кроме джокеров
+        for (ConsoleCard card : values()) {
+            if (!card.id.equals("115") && !card.id.equals("315")) {
+                deck[index++] = card;
+            }
+        }
+        return deck;
+    }
+
+    // Получить все карты с джокерами (54 карты)
+    public static ConsoleCard[] getFullDeck() {
+        ConsoleCard[] deck = new ConsoleCard[54];
+        int index = 0;
+
+        // Добавляем все карты включая джокеры
+        for (ConsoleCard card : values()) {
+            deck[index++] = card;
+        }
+        return deck;
+    }
+
+    public static void printCards(ArrayList<ConsoleCard> cards) {
+        if (cards == null || cards.isEmpty()) return;
+
+        String[] firstCardLines = cards.get(0).graphic.split("\n");
+        int height = firstCardLines.length;
 
         for (int i = 0; i < height; i++) {
             StringBuilder line = new StringBuilder();
-            for (ConsoleCard consoleCard : consoleCards) {
-                String[] consoleCardLines = consoleCard.graphic.split("\n");
-                if (i < consoleCardLines.length) {
-                    line.append(consoleCardLines[i]);
+            for (ConsoleCard card : cards) {
+                String[] cardLines = card.graphic.split("\n");
+                if (i < cardLines.length) {
+                    line.append(cardLines[i]);
                     line.append("  ");
                 }
             }
@@ -367,26 +520,24 @@ public enum ConsoleCard {
         }
     }
 
+    public static void printCards(ConsoleCard... cards) {
+        if (cards == null || cards.length == 0) return;
 
-    public static void printCards(ConsoleCard... ConsoleCards) {
-        if (ConsoleCards == null || ConsoleCards.length == 0) return;
-
-        String[] firstConsoleCardLines = ConsoleCards[0].graphic.split("\n");
-        int height = firstConsoleCardLines.length;
+        String[] firstCardLines = cards[0].graphic.split("\n");
+        int height = firstCardLines.length;
 
         for (int i = 0; i < height; i++) {
             StringBuilder line = new StringBuilder();
-            for (ConsoleCard ConsoleCard : ConsoleCards) {
-                String[] ConsoleCardLines = ConsoleCard.graphic.split("\n");
-                if (i < ConsoleCardLines.length) {
-                    line.append(ConsoleCardLines[i]);
+            for (ConsoleCard card : cards) {
+                String[] cardLines = card.graphic.split("\n");
+                if (i < cardLines.length) {
+                    line.append(cardLines[i]);
                     line.append("  ");
                 }
             }
             System.out.println(line);
         }
     }
-
 
     @Override
     public String toString() {

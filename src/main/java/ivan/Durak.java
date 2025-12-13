@@ -136,7 +136,18 @@ public class Durak {
                 System.out.println("Робот отбивает карту:");
                 printCards(cardToBeat.getConsoleCard());
                 System.out.println("картой:");
-                printCards(defenseCard.getConsoleCard());
+
+                // Безопасный вывод карты
+                try {
+                    ConsoleCard consoleCard = defenseCard.getConsoleCard();
+                    if (consoleCard != null) {
+                        printCards(consoleCard);
+                    } else {
+                        System.out.println("Карта: " + defenseCard.toString());
+                    }
+                } catch (Exception e) {
+                    System.out.println("Карта: " + defenseCard.toString());
+                }
 
                 playTable.getDeck().addCardToDefDeck(defenseCard);
                 defendingRobot.removeCard(defenseCard);
@@ -182,7 +193,7 @@ public class Durak {
                     printCards(selectedCard.getConsoleCard());
 
                     // Робот должен отбить подкинутую карту
-                    System.out.println("Робот пытается отбить подкинутую карту...");
+                    System.out.println("Робот пытается отбить подкинутую карту");
                     Card defenseCard = defendingRobot.chooseDefenseCard(selectedCard, playTable.getTrumpCard());
 
                     if (defenseCard == null) {
@@ -196,7 +207,19 @@ public class Durak {
                         return; // Выходим из цикла подкидывания
                     } else {
                         System.out.println("Робот отбивает подкинутую карту:");
-                        printCards(defenseCard.getConsoleCard());
+
+                        // Безопасный вывод карты
+                        try {
+                            ConsoleCard consoleCard = defenseCard.getConsoleCard();
+                            if (consoleCard != null) {
+                                printCards(consoleCard);
+                            } else {
+                                System.out.println("Карта: " + defenseCard.toString());
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Карта: " + defenseCard.toString());
+                        }
+
                         playTable.getDeck().addCardToDefDeck(defenseCard);
                         defendingRobot.removeCard(defenseCard);
                     }
@@ -219,22 +242,36 @@ public class Durak {
 
     private void handleRobotAdditionsAfterDefense(Robot defendingRobot) {
         // Другие роботы могут подкидывать только если защищающийся робот успешно отбился
-        System.out.println("\nДругие роботы могут подкинуть карты...");
+        System.out.println("\nДругие роботы могут подкинуть карты");
 
         for (Robot robot : robots) {
             if (robot != defendingRobot && robot != humanPlayer && robot.getNumCards() > 0) {
-                if (robot.decideToAddMoreCards(playTable.getDeck().getActiveCards())) {
-                    Card cardToAdd = findCardToAdd(robot, playTable.getDeck().getActiveCards());
+                if (robot.decideToAddMoreCards(playTable.getDeck().getActiveCards(),
+                        playTable.getTrumpCard(),
+                        playTable.getPlayers(),
+                        playTable.defendingPlayer)) {
+                    Card cardToAdd = robot.getCardToAdd(playTable.getDeck().getActiveCards());
 
                     if (cardToAdd != null) {
                         System.out.println("Робот " + robot.getPlayerID() + " подкидывает карту!");
-                        printCards(cardToAdd.getConsoleCard());
+
+                        // Безопасный вывод карты
+                        try {
+                            ConsoleCard consoleCard = cardToAdd.getConsoleCard();
+                            if (consoleCard != null) {
+                                printCards(consoleCard);
+                            } else {
+                                System.out.println("Карта: " + cardToAdd.toString());
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Карта: " + cardToAdd.toString());
+                        }
 
                         playTable.getDeck().addCardToAttDeck(cardToAdd);
                         robot.removeCard(cardToAdd);
 
                         // Защищающийся робот должен отбить подкинутую карту
-                        System.out.println("Робот " + defendingRobot.getPlayerID() + " пытается отбить подкинутую карту...");
+                        System.out.println("Робот " + defendingRobot.getPlayerID() + " пытается отбить подкинутую карту");
                         Card defenseCard = defendingRobot.chooseDefenseCard(cardToAdd, playTable.getTrumpCard());
 
                         if (defenseCard == null) {
@@ -248,7 +285,19 @@ public class Durak {
                             return;
                         } else {
                             System.out.println("Робот " + defendingRobot.getPlayerID() + " отбивает подкинутую карту:");
-                            printCards(defenseCard.getConsoleCard());
+
+                            // Безопасный вывод карты
+                            try {
+                                ConsoleCard consoleCard = defenseCard.getConsoleCard();
+                                if (consoleCard != null) {
+                                    printCards(consoleCard);
+                                } else {
+                                    System.out.println("Карта: " + defenseCard.toString());
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Карта: " + defenseCard.toString());
+                            }
+
                             playTable.getDeck().addCardToDefDeck(defenseCard);
                             defendingRobot.removeCard(defenseCard);
                         }
@@ -271,8 +320,10 @@ public class Durak {
     private void robotTurn(Robot robot) {
         System.out.println("\n=== ХОДИТ РОБОТ " + robot.getPlayerID() + " ===");
 
-        // Атака робота
-        Card attackCard = robot.chooseAttackCard(playTable.getDeck().getActiveCards(), playTable.getTrumpCard());
+        // Атака робота с передачей всех необходимых параметров
+        Card attackCard = robot.chooseAttackCard(playTable.getDeck().getActiveCards(),
+                playTable.getTrumpCard(),
+                playTable.getPlayers());
 
         if (attackCard == null) {
             System.out.println("У робота нет карт для атаки!");
@@ -283,7 +334,18 @@ public class Durak {
         robot.removeCard(attackCard);
 
         System.out.println("Робот " + robot.getPlayerID() + " атакует картой:");
-        printCards(attackCard.getConsoleCard());
+
+        // Безопасный вывод карты
+        try {
+            ConsoleCard consoleCard = attackCard.getConsoleCard();
+            if (consoleCard != null) {
+                printCards(consoleCard);
+            } else {
+                System.out.println("Карта: " + attackCard.toString());
+            }
+        } catch (Exception e) {
+            System.out.println("Карта: " + attackCard.toString());
+        }
 
         // Защита человека
         if (playTable.defendingPlayer == humanPlayer) {
@@ -303,12 +365,26 @@ public class Durak {
 
             if (defenseSuccessful) {
                 // Атакующий робот может подкинуть
-                if (robot.decideToAddMoreCards(playTable.getDeck().getActiveCards())) {
-                    Card cardToAdd = findCardToAdd(robot, playTable.getDeck().getActiveCards());
+                if (robot.decideToAddMoreCards(playTable.getDeck().getActiveCards(),
+                        playTable.getTrumpCard(),
+                        playTable.getPlayers(),
+                        playTable.defendingPlayer)) {
+                    Card cardToAdd = robot.getCardToAdd(playTable.getDeck().getActiveCards());
 
                     if (cardToAdd != null) {
                         System.out.println("Робот " + robot.getPlayerID() + " подкидывает карту!");
-                        printCards(cardToAdd.getConsoleCard());
+
+                        // Безопасный вывод карты
+                        try {
+                            ConsoleCard consoleCard = cardToAdd.getConsoleCard();
+                            if (consoleCard != null) {
+                                printCards(consoleCard);
+                            } else {
+                                System.out.println("Карта: " + cardToAdd.toString());
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Карта: " + cardToAdd.toString());
+                        }
 
                         playTable.getDeck().addCardToAttDeck(cardToAdd);
                         robot.removeCard(cardToAdd);
@@ -326,7 +402,19 @@ public class Durak {
                             defenderTookCards = true;
                         } else {
                             System.out.println("Робот " + defendingRobot.getPlayerID() + " отбивает подкинутую карту:");
-                            printCards(defenseCard.getConsoleCard());
+
+                            // Безопасный вывод карты
+                            try {
+                                ConsoleCard consoleCard = defenseCard.getConsoleCard();
+                                if (consoleCard != null) {
+                                    printCards(consoleCard);
+                                } else {
+                                    System.out.println("Карта: " + defenseCard.toString());
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Карта: " + defenseCard.toString());
+                            }
+
                             playTable.getDeck().addCardToDefDeck(defenseCard);
                             defendingRobot.removeCard(defenseCard);
                         }
@@ -381,7 +469,7 @@ public class Durak {
     }
 
     private boolean handleRobotVsRobotDefense(Robot defendingRobot, Card attackCard) {
-        System.out.println("\nРобот " + defendingRobot.getPlayerID() + " защищается...");
+        System.out.println("\nРобот " + defendingRobot.getPlayerID() + " защищается");
 
         Card defenseCard = defendingRobot.chooseDefenseCard(attackCard, playTable.getTrumpCard());
 
@@ -396,7 +484,18 @@ public class Durak {
             return false;
         } else {
             System.out.println("Робот " + defendingRobot.getPlayerID() + " отбивается картой:");
-            printCards(defenseCard.getConsoleCard());
+
+            // Безопасный вывод карты
+            try {
+                ConsoleCard consoleCard = defenseCard.getConsoleCard();
+                if (consoleCard != null) {
+                    printCards(consoleCard);
+                } else {
+                    System.out.println("Карта: " + defenseCard.toString());
+                }
+            } catch (Exception e) {
+                System.out.println("Карта: " + defenseCard.toString());
+            }
 
             playTable.getDeck().addCardToDefDeck(defenseCard);
             defendingRobot.removeCard(defenseCard);
@@ -405,12 +504,26 @@ public class Durak {
     }
 
     private void handleRobotAdditionsAfterHumanDefense(Robot attackingRobot) {
-        if (attackingRobot.decideToAddMoreCards(playTable.getDeck().getActiveCards())) {
-            Card cardToAdd = findCardToAdd(attackingRobot, playTable.getDeck().getActiveCards());
+        if (attackingRobot.decideToAddMoreCards(playTable.getDeck().getActiveCards(),
+                playTable.getTrumpCard(),
+                playTable.getPlayers(),
+                playTable.defendingPlayer)) {
+            Card cardToAdd = attackingRobot.getCardToAdd(playTable.getDeck().getActiveCards());
 
             if (cardToAdd != null) {
                 System.out.println("Робот " + attackingRobot.getPlayerID() + " подкидывает карту!");
-                printCards(cardToAdd.getConsoleCard());
+
+                // Безопасный вывод карты
+                try {
+                    ConsoleCard consoleCard = cardToAdd.getConsoleCard();
+                    if (consoleCard != null) {
+                        printCards(consoleCard);
+                    } else {
+                        System.out.println("Карта: " + cardToAdd.toString());
+                    }
+                } catch (Exception e) {
+                    System.out.println("Карта: " + cardToAdd.toString());
+                }
 
                 playTable.getDeck().addCardToAttDeck(cardToAdd);
                 attackingRobot.removeCard(cardToAdd);
@@ -429,12 +542,26 @@ public class Durak {
     private void handleOtherRobotsAdditions(Robot attackingRobot) {
         for (Robot otherRobot : robots) {
             if (otherRobot != attackingRobot && otherRobot != humanPlayer) {
-                if (otherRobot.decideToAddMoreCards(playTable.getDeck().getActiveCards())) {
-                    Card cardToAdd = findCardToAdd(otherRobot, playTable.getDeck().getActiveCards());
+                if (otherRobot.decideToAddMoreCards(playTable.getDeck().getActiveCards(),
+                        playTable.getTrumpCard(),
+                        playTable.getPlayers(),
+                        playTable.defendingPlayer)) {
+                    Card cardToAdd = otherRobot.getCardToAdd(playTable.getDeck().getActiveCards());
 
                     if (cardToAdd != null) {
                         System.out.println("Робот " + otherRobot.getPlayerID() + " подкидывает карту!");
-                        printCards(cardToAdd.getConsoleCard());
+
+                        // Безопасный вывод карты
+                        try {
+                            ConsoleCard consoleCard = cardToAdd.getConsoleCard();
+                            if (consoleCard != null) {
+                                printCards(consoleCard);
+                            } else {
+                                System.out.println("Карта: " + cardToAdd.toString());
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Карта: " + cardToAdd.toString());
+                        }
 
                         playTable.getDeck().addCardToAttDeck(cardToAdd);
                         otherRobot.removeCard(cardToAdd);
@@ -450,17 +577,6 @@ public class Durak {
                 }
             }
         }
-    }
-
-    private Card findCardToAdd(Robot robot, ArrayList<Card> tableCards) {
-        for (Card robotCard : robot.getCards()) {
-            for (Card tableCard : tableCards) {
-                if (robotCard.getNumber() == tableCard.getNumber()) {
-                    return robotCard;
-                }
-            }
-        }
-        return null;
     }
 
     private boolean canPlayerAddCards(Player player) {
@@ -623,7 +739,7 @@ public class Durak {
 
         System.out.println("\n=== НАСТРОЙКИ ИГРЫ ===");
         System.out.println(settings.settingsToString());
-        System.out.println("\nИгра начинается...");
+        System.out.println("\nИгра начинается");
 
         Durak durak = new Durak(settings, gameType, countOfPlayers - 1);
         durak.gameCycle();
