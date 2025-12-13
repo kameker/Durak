@@ -11,6 +11,9 @@ public class Player {
     public void addCard(Card card){
         cards.add(card);
     }
+    public void removeCard(Card card){
+        cards.remove(card);
+    }
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
     }
@@ -23,12 +26,8 @@ public class Player {
     public int getNumCards(){
         return cards.size();
     }
-    public ArrayList<ConsoleCard> getConsoleCards(){
-        ArrayList<ConsoleCard> consoleCards = new ArrayList<>();
-        for (Card card : cards) {
-            consoleCards.add(card.getConsoleCard());
-        }
-        return consoleCards;
+    public void addCards(ArrayList<Card> cards){
+        this.cards.addAll(cards);
     }
     @Override
     public boolean equals(Object obj) {

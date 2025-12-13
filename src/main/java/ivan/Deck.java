@@ -29,7 +29,18 @@ public class Deck {
     public ArrayList<Card> getBitDeck() {
         return bitDeck;
     }
-
+    public void addCardToAttDeck(Card card) {
+        attDeck.add(card);
+    }
+    public void addCardToDefDeck(Card card) {
+        defDeck.add(card);
+    }
+    public ArrayList<Card> getActiveCards(){
+        ArrayList<Card> activeCards = new ArrayList<>();
+        activeCards.addAll(attDeck);
+        activeCards.addAll(defDeck);
+        return activeCards;
+    }
     public void generateDeck() {
         ArrayList<Card> cards = new ArrayList<>();
         for (int i = this.minCard; i <= this.maxCard; i++) {
