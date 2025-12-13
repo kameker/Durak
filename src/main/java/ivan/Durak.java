@@ -24,6 +24,8 @@ public class Durak {
     private Scanner input = new Scanner(System.in);
 
     private void gameCycle() {
+        System.out.println("Козырь:");
+        System.out.println(this.playTable.getTrumpCard().getConsoleCard());
         while (!isSomeoneWin(this.playTable.getQueueOfPlayers())) {
             attackPhase(playTable.activePlayer);
             defencePhase(playTable.activePlayer);
@@ -32,21 +34,23 @@ public class Durak {
         }
     }
 
-    public void attackPhase(Player player) {
+    public void attackPhase(Player attackPlayer) {
+        this.playTable.attackingPlayer = attackPlayer;
+        this.playTable.defendingPlayer = this.playTable.getPlayers().get((this.playTable.getPlayers().indexOf(attackPlayer) + 1) % this.playTable.getPlayers().size());
         System.out.println("Вы атакуете");
         System.out.print("Выберете карту:\n");
-        printCards(arrCardsToConsoleCards(player.getCards()));
-        while (N > player.getNumCards() || N < 1) {
+        printCards(arrCardsToConsoleCards(attackPlayer.getCards()));
+        while (N > attackPlayer.getNumCards() || N < 1) {
             N = input.hasNextInt() ? input.nextInt() : 0;
-            if (N > player.getNumCards() || N < 1) {
+            if (N > attackPlayer.getNumCards() || N < 1) {
                 System.out.print("Выберете карту:\n");
             }
         }
 
-        this.playTable.getDeck().addCardToAttDeck(player.getCards().get(N - 1));
-        player.removeCard(player.getCards().get(N - 1));
+        this.playTable.getDeck().addCardToAttDeck(attackPlayer.getCards().get(N - 1));
+        attackPlayer.removeCard(attackPlayer.getCards().get(N - 1));
         int k = 0;
-        while (heHasMoreSameCards(player.getCards(), this.playTable.getDeck().getAttDeck())) {
+        while (heHasMoreSameCards(attackPlayer.getCards(), this.playTable.getDeck().getAttDeck())) {
             System.out.print("Положить ещё карту?(0/1)");
             while (moreCardsFlag == -1) {
                 moreCardsFlag = input.hasNextInt() ? input.nextInt() : -1;
@@ -56,16 +60,16 @@ public class Durak {
             }
             if (moreCardsFlag == 1) {
                 System.out.print("Выберете номер карты:\n");
-                printCards(arrCardsToConsoleCards(player.getCards()));
+                printCards(arrCardsToConsoleCards(attackPlayer.getCards()));
                 N = 0;
-                while (N > player.getNumCards() || N < 1) {
+                while (N > attackPlayer.getNumCards() || N < 1) {
                     N = input.hasNextInt() ? input.nextInt() : 0;
-                    if (N > player.getNumCards() || N < 1) {
+                    if (N > attackPlayer.getNumCards() || N < 1) {
                         System.out.print("Выберете номер карты:\n");
                     }
                 }
-                this.playTable.getDeck().addCardToAttDeck(player.getCards().get(N - 1));
-                player.removeCard(player.getCards().get(N - 1));
+                this.playTable.getDeck().addCardToAttDeck(attackPlayer.getCards().get(N - 1));
+                attackPlayer.removeCard(attackPlayer.getCards().get(N - 1));
                 k++;
             }
             moreCardsFlag = -1;
@@ -94,7 +98,7 @@ public class Durak {
                 int m = 0;
                 while (this.playTable.getDeck().getAttDeck().size() > this.playTable.getDeck().getDefDeck().size()) {
                     System.out.printf("Какой картой будете бить данную карту (1-%d):\n", player.getNumCards());
-                    System.out.println(this.playTable.getDeck().getAttDeck().get(m).getConsoleCard() + "\n");
+                    printCards(arrCardsToConsoleCards(this.playTable.getDeck().getAttDeck()));
                     printCards(arrCardsToConsoleCards(player.getCards()));
                     while (N2 == 0) {
                         N2 = input.hasNextInt() ? input.nextInt() : 0;
@@ -105,6 +109,8 @@ public class Durak {
                     this.playTable.getDeck().addCardToDefDeck(player.getCards().get(N2 - 1));
                 }
                 System.out.println("Вы отбили атаку");
+                System.out.println(playTable.getDeck().getDefDeck());
+                System.out.println(playTable.getDeck().getAttDeck());
                 player.removeCard(player.getCards().get(N2 - 1));
                 if (canAnyPlayerFake(getPlayersWithoutDefPlayer(player), this.playTable.getDeck().getActiveCards())) {
                     this.fakePlayers = getPlayersForFake(getPlayersWithoutDefPlayer(player), this.playTable.getDeck().getActiveCards());
@@ -112,18 +118,44 @@ public class Durak {
             } else {
                 System.out.println("Вы лох");
                 this.playTable.activePlayer.addCards(this.playTable.getDeck().getAttDeck());
+                this.playTable.nextActivePlayer();
             }
+            N = 0;
         }
+
     }
 
     public void fakePhase() {
         if (fakePlayers.size() != 0) {
             System.out.println("Фаза подкидывания");
+
+        } else {
+            for (Player player : fakePlayers) {
+
+            }
         }
     }
 
     public void updateInfo() {
-
+        int k = 0;
+        for (Player player : getPlayersWithoutDefPlayer(this.playTable.activePlayer)) {
+            while (player.getCards().size() < 6) {
+                if (!this.playTable.getDeck().getPlayDeck().isEmpty()) {
+                    player.addCard(this.playTable.getDeck().getPlayDeck().get(k));
+                    this.playTable.getDeck().getPlayDeck().remove(k);
+                    k++;
+                } else break;
+            }
+        }
+        while (this.playTable.activePlayer.getCards().size() < 6) {
+            if (!this.playTable.getDeck().getPlayDeck().isEmpty()) {
+                this.playTable.activePlayer.addCard(this.playTable.getDeck().getPlayDeck().get(k));
+                this.playTable.getDeck().getPlayDeck().remove(k);
+                k++;
+            }
+        }
+        this.playTable.getDeck().getAttDeck().clear();
+        this.playTable.getDeck().getDefDeck().clear();
     }
 
     public boolean isSomeoneWin(ArrayList<Player> players) {
@@ -132,6 +164,7 @@ public class Durak {
         }
         return false;
     }
+
     public ArrayList<Player> getPlayersForFake(ArrayList<Player> players, ArrayList<Card> activeCards) {
         ArrayList<Player> fakePlayers = new ArrayList<>();
         boolean flag = false;
@@ -149,6 +182,7 @@ public class Durak {
         }
         return fakePlayers;
     }
+
     public boolean canAnyPlayerFake(ArrayList<Player> players, ArrayList<Card> activeCards) {
         for (Player player : players) {
             for (Card card : player.getCards()) {
@@ -161,6 +195,7 @@ public class Durak {
         }
         return false;
     }
+
     public ArrayList<Player> getPlayersWithoutDefPlayer(Player defPlayer) {
         ArrayList<Player> players = new ArrayList<>();
         for (Player player : this.playTable.getQueueOfPlayers()) {
@@ -170,6 +205,7 @@ public class Durak {
         }
         return players;
     }
+
     public boolean canPlayerDef(ArrayList<Card> attackCards, ArrayList<Card> defCards) {
         int k = 0;
         ArrayList<Card> defCardsCopy = (ArrayList<Card>) defCards.clone();
@@ -197,7 +233,7 @@ public class Durak {
     }
 
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         DurakSettings settings = new DurakSettings();
         Scanner sc = new Scanner(System.in);
         int gameType = 0, countOfPlayers = 0, countOfCards = 0, countOfRobots = 0;

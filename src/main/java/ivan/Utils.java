@@ -34,4 +34,14 @@ public class Utils {
         }
         return consoleCards;
     }
+
+    public ArrayList<Player> getPlayersWithout(ArrayList<Player> players, Player player){
+        ArrayList<Player> players2 = new ArrayList<>();
+        for (Player player1 : players){
+            if (!player1.equals(player)) {
+                players2.add(player1);
+            }
+        }
+        return players2;
+    }
 }
