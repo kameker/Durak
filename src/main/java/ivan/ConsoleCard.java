@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public enum ConsoleCard {
 
-    // Пики (Spades 1) - добавлены карты 2-5
     TWO_SPADE("21", 2,
             """
                     ┌─────┐
@@ -445,14 +444,14 @@ public enum ConsoleCard {
     private final int rank;
     private final String graphic;
 
-    // Конструктор
+
     ConsoleCard(String id, int rank, String graphic) {
         this.id = id;
         this.rank = rank;
         this.graphic = graphic;
     }
 
-    // Геттеры
+
     public String getId() {
         return id;
     }
@@ -465,7 +464,7 @@ public enum ConsoleCard {
         return graphic;
     }
 
-    // Получить карту по ID
+
     public static ConsoleCard fromById(String id) {
         for (ConsoleCard card : values()) {
             if (card.id.equals(id)) {
@@ -475,21 +474,6 @@ public enum ConsoleCard {
         return null;
     }
 
-    // Получить все карты стандартной колоды (52 карты без джокеров)
-    public static ConsoleCard[] getStandardDeck() {
-        ConsoleCard[] deck = new ConsoleCard[52];
-        int index = 0;
-
-        // Добавляем все карты кроме джокеров
-        for (ConsoleCard card : values()) {
-            if (!card.id.equals("115") && !card.id.equals("315")) {
-                deck[index++] = card;
-            }
-        }
-        return deck;
-    }
-
-    // Получить все карты с джокерами (54 карты)
     public static ConsoleCard[] getFullDeck() {
         ConsoleCard[] deck = new ConsoleCard[54];
         int index = 0;

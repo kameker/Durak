@@ -7,9 +7,7 @@ import java.util.Random;
 
 public class Robot extends Human {
     private Random random = new Random();
-    private Map<Integer, Integer> cardMemory = new HashMap<>(); // Запоминание сыгранных карт
     private int myPlayerID; // ID этого робота
-    private ArrayList<Card> knownPlayedCards = new ArrayList<>(); // Запомненные сыгранные карты
 
     public Robot(int playerID) {
         super(playerID);
@@ -466,23 +464,6 @@ public class Robot extends Human {
         return true;
     }
 
-    // Метод для обновления памяти о сыгранных картах
-    public void updateCardMemory(Card playedCard) {
-        if (playedCard != null && isValidCard(playedCard)) {
-            knownPlayedCards.add(playedCard);
-
-            // Ограничиваем размер памяти (например, последние 20 карт)
-            if (knownPlayedCards.size() > 20) {
-                knownPlayedCards.remove(0);
-            }
-        }
-    }
-
-    // Проверка, была ли карта уже сыграна
-    public boolean isCardPlayed(Card card) {
-        return knownPlayedCards.contains(card);
-    }
-
     // Метод для получения карты для подкидывания
     public Card getCardToAdd(ArrayList<Card> tableCards) {
         ArrayList<Card> myCards = getCards();
@@ -498,29 +479,5 @@ public class Robot extends Human {
         }
 
         return null;
-    }
-
-    // Метод для оценки силы руки
-    public int evaluateHandStrength(Card trumpCard) {
-        ArrayList<Card> myCards = getCards();
-        int strength = 0;
-
-        for (Card card : myCards) {
-            if (!isValidCard(card)) continue;
-
-            // Козыри ценятся выше
-            if (card.getSuit() == trumpCard.getSuit()) {
-                strength += card.getNumber() * 2;
-            } else {
-                strength += card.getNumber();
-            }
-
-            // Бонус за сильные карты
-            if (card.getNumber() >= 12) {
-                strength += 5;
-            }
-        }
-
-        return strength;
     }
 }

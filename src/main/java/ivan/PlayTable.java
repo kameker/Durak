@@ -34,23 +34,8 @@ public class PlayTable {
         return deck;
     }
 
-    public void nextActivePlayer() {
-        int currentIndex = queueOfPlayers.indexOf(this.activePlayer);
-        int nextIndex = (currentIndex + 1) % queueOfPlayers.size();
-        this.activePlayer = queueOfPlayers.get(nextIndex);
-        this.defendingPlayer = queueOfPlayers.get((nextIndex + 1) % queueOfPlayers.size());
-    }
-
-    public void setNextPlayerFromDefender() {
-        // Устанавливает активного игрока как следующего после защищавшегося
-        int defenderIndex = queueOfPlayers.indexOf(this.defendingPlayer);
-        int nextIndex = (defenderIndex + 1) % queueOfPlayers.size();
-        this.activePlayer = queueOfPlayers.get(nextIndex);
-        this.defendingPlayer = queueOfPlayers.get((nextIndex + 1) % queueOfPlayers.size());
-    }
-
     public void setQueueOfPlayers() {
-        // Простая очередь - по порядку создания
+
         this.queueOfPlayers = new ArrayList<>(this.players);
     }
 
@@ -69,10 +54,7 @@ public class PlayTable {
     }
 
     public void setCardsForPlayers() {
-        // Раздаем по 6 карт каждому игроку
-        int cardsPerPlayer = 6;
-
-        for (int i = 0; i < cardsPerPlayer; i++) {
+        for (int i = 0; i < 6; i++) {
             for (Player player : players) {
                 if (!this.deck.getPlayDeck().isEmpty()) {
                     Card card = this.deck.getPlayDeck().remove(0);

@@ -12,32 +12,11 @@ public class Card {
         this.suit = suit;
     }
 
-    public Card(String id) {
-        // Парсим строку вида "131" или "101"
-        if (id.length() == 2) {
-            // Двузначные номера (2-9)
-            this.number = Integer.parseInt(String.valueOf(id.charAt(0)));
-            this.suit = Integer.parseInt(String.valueOf(id.charAt(1)));
-        } else if (id.length() == 3) {
-            // Трехзначные номера (10-14)
-            if (id.startsWith("10") || id.startsWith("11") || id.startsWith("12") ||
-                    id.startsWith("13") || id.startsWith("14")) {
-                this.number = Integer.parseInt(id.substring(0, 2));
-                this.suit = Integer.parseInt(String.valueOf(id.charAt(2)));
-            } else if (id.startsWith("15")) {
-                // Джокеры
-                this.number = 15;
-                this.suit = Integer.parseInt(String.valueOf(id.charAt(2)));
-            }
-        }
-    }
-
     public ConsoleCard getConsoleCard() {
         return fromById(this.getCardsId());
     }
 
     public String getCardsId() {
-        // Формируем ID в формате "числомасть" (например, "131" для короля пик)
         return String.valueOf(number) + suit;
     }
 

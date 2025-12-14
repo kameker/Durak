@@ -47,14 +47,12 @@ public class Deck {
     public void generateDeck() {
         ArrayList<Card> cards = new ArrayList<>();
 
-        // Создаем карты от minCard до maxCard
         for (int number = this.minCard; number <= this.maxCard; number++) {
             for (int suit = 1; suit <= 4; suit++) {
                 cards.add(new Card(suit, number));
             }
         }
 
-        // Добавляем джокеров для колоды в 54 карты
         if (this.maxCard == 14 && cards.size() == 52) { // Если это колода в 52 карты
             cards.add(new Card(1, 15)); // Черный джокер
             cards.add(new Card(3, 15)); // Красный джокер
