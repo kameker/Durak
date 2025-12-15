@@ -7,26 +7,14 @@ public class Card {
     private int number;
     private int suit;
 
-
     public Card(int suit, int number) {
         this.number = number;
         this.suit = suit;
-
-    }
-
-    public Card(String id) {
-        this.number = Integer.parseInt(String.valueOf(id.charAt(1)));
-        this.suit = Integer.parseInt(String.valueOf(id.charAt(0)));
-        System.out.println(id);
-        if (id.length() == 3)
-            this.number = Integer.parseInt(String.valueOf(id.charAt(1)) + id.charAt(2));
-
     }
 
     public ConsoleCard getConsoleCard() {
         return fromById(this.getCardsId());
     }
-
 
     public String getCardsId() {
         return String.valueOf(number) + suit;
@@ -73,6 +61,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card{" + "number=" + number + ", suit=" + suit + '}' + "\n";
+        return "Card{number=" + number + ", suit=" + suit + "}";
     }
 }
